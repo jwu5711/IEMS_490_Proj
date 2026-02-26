@@ -95,13 +95,14 @@ class WaveNet(nn.Module):
     """
 
     def __init__(self, input_size, out_channels, kernel_size, n):
+        super(WaveNet, self).__init__() # Make sure we can call model
         self.in_channels = 1
 
-        self.conv1 = nn.Conv1d(1, out_channels, 1)
+        self.conv1 = nn.Conv1d(input_size, out_channels, 1) # Change 1 to input_size
         self.wavenet_block = WaveNetBlock(
-            self.in_channels, out_channels, kernel_size, n)
-        self.conv2 = nn.Conv1d(1, 1, 1)
-        self.conv3 = nn.Conv1d(1, 1, 1)
+            out_channels, out_channels, kernel_size, n) # Change self.in_channels to out_channels
+        self.conv2 = nn.Conv1d(out_channels, out_channels, 1)
+        self.conv3 = nn.Conv1d(out_channels, input_size, 1)
         self.fc = nn.Linear(input_size, 256)
 
     def forward(self, x):
@@ -119,8 +120,8 @@ class WaveNet(nn.Module):
         x = F.relu(x_sum)
         x = F.relu(self.conv2(x))
         x = self.conv3(x)
-        x = x.view(-1, self.num_flat_features(x))
-        x = F.softmax(self.fc(x))
+        #x = x.view(-1, self.num_flat_features(x))
+        #x = F.softmax(self.fc(x))
 
         return x
 
