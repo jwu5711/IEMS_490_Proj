@@ -23,27 +23,36 @@ class WaveNetLayer(nn.Module):
 
     # Returns:
     """
-
     def __init__(self, in_channels, out_channels, kernel_size, dilation):
         super().__init__()
         # Dilated Conv
+        # We use 'same' padding to keep the sequence length consistent
         padding = dilation * (kernel_size - 1) // 2
         self.conv1 = nn.Conv1d(in_channels, out_channels, kernel_size,
                                padding=padding,
                                dilation=dilation)
         self.tanh = nn.Tanh()
         self.sigm = nn.Sigmoid()
+        
+        # --- THE FIX IS HERE ---
+        # Change out_channels=1 to out_channels=out_channels
         self.conv2 = nn.Conv1d(in_channels=out_channels,
-                               out_channels=1, kernel_size=1)
+                               out_channels=out_channels, 
+                               kernel_size=1)
 
     def forward(self, x):
+        # x shape: [Batch, 32, Length]
         conv_out = self.conv1(x)
 
+        # Gated Activation Unit
         tanh_out = self.tanh(conv_out)
         sigm_out = self.sigm(conv_out)
-
         x_mul = torch.mul(tanh_out, sigm_out)
-        x_skip_connection = self.conv2(x_mul)
+        
+        # 1x1 Conv to produce skip and residual
+        x_skip_connection = self.conv2(x_mul) # Now stays at 32 channels
+        
+        # Residual connection
         x_residual = torch.add(x, x_skip_connection)
 
         return x_residual, x_skip_connection
@@ -58,28 +67,27 @@ class WaveNetBlock(nn.Module):
 
     # Returns:
     """
-
     def __init__(self, in_channels, out_channels, kernel_size, n):
         super().__init__()
         self.n = n
-
-        layers = []
-        dilation_rates = [2**i for i in range(self.n)]
-        for i, dilation_rate in enumerate(dilation_rates):
-            layers.append(
-                ("wavenet_layer_" + str(i),
-                 WaveNetLayer(in_channels, out_channels, kernel_size, dilation_rate))
-            )
-        self.wavenet_layers = nn.Sequential(OrderedDict(layers))
+        
+        # Use nn.ModuleList instead of Sequential if you need to 
+        # manually loop and extract intermediate skip connections.
+        self.wavenet_layers = nn.ModuleList([
+            WaveNetLayer(in_channels, out_channels, kernel_size, 2**i) 
+            for i in range(n)
+        ])
 
     def forward(self, x):
         x_skip_connections = []
 
-        # Apply dilated Conv
-        for i in range(self.n):
-            x, x_skip_connection = self.wavenet_layers[i](x)
-            x_skip_connections.append(x_skip_connection)
+        # Iterate through ModuleList correctly
+        for layer in self.wavenet_layers:
+            # x is the residual path, x_skip is the side path
+            x, x_skip = layer(x)
+            x_skip_connections.append(x_skip)
 
+        # Return the final residual and the list of skip connections
         return x, x_skip_connections
 
 
@@ -102,32 +110,36 @@ class WaveNet(nn.Module):
         self.wavenet_block = WaveNetBlock(
             out_channels, out_channels, kernel_size, n) # Change self.in_channels to out_channels
         self.conv2 = nn.Conv1d(out_channels, out_channels, 1)
-        self.conv3 = nn.Conv1d(out_channels, input_size, 1)
+        self.conv3 = nn.Conv1d(out_channels, out_channels, 1)
+        self.conv4 = nn.Conv1d(out_channels, out_channels, 1)
+        self.conv5 = nn.Conv1d(out_channels, input_size, 1)
         self.fc = nn.Linear(input_size, 256)
+    
 
     def forward(self, x):
         """
         docstring
         """
+        class Sin(nn.Module):
+            def forward(self, input):
+                return torch.sin(input)
         # Apply causal conv to the input
         x = self.conv1(x)
 
         # Note that the x_residual output port is not used. It may be used to form multi wavenet_block in a cascading configuration.
-        x_residual, x_sum = self.wavenet_block(x)
+        # 2. Block: Returns list of skip tensors, each [Batch, 32, 17672]
+        x_residual, x_skip_list = self.wavenet_block(x)
 
-        # Model top layers, including fully-connected layer, which produces output
-        #x_sum = torch.sum(x_sum, dim=1)
-        if isinstance(x_sum, list):
-            # If it's a list, sum them element-wise
-            x = sum(x_sum)
-        else:
-            # If it's already a single tensor, just use it
-            x = x_sum
-        x = F.relu(x)
-        x = F.relu(self.conv2(x))
-        x = self.conv3(x)
-        #x = x.view(-1, self.num_flat_features(x))
-        #x = F.softmax(self.fc(x))
+        # 3. Sum the SKIP connections (the list), NOT the channels (dim 1)
+        # Using Python's sum() on a list of tensors keeps the shape [Batch, 32, 17672]
+        x = sum(x_skip_list)
+
+        # 4. Final Convs
+        x = Sin(x)
+        x = F.relu(self.conv2(x)) # Expects 32 in, gives 32 out
+        x = Sin(self.conv3(x))
+        x = F.relu(self.conv4(x))
+        x = F.relu(self.conv5(x))
 
         return x
 
