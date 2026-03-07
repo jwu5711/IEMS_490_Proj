@@ -111,6 +111,8 @@ class WaveNet(nn.Module):
             out_channels, out_channels, kernel_size, n) # Change self.in_channels to out_channels
         self.conv2 = nn.Conv1d(out_channels, out_channels, 1)
         self.conv3 = nn.Conv1d(out_channels, out_channels, 1)
+        self.wavenet_block2 = WaveNetBlock(
+            out_channels, out_channels, kernel_size, n) # Change self.in_channels to out_channels
         self.conv4 = nn.Conv1d(out_channels, out_channels, 1)
         self.conv5 = nn.Conv1d(out_channels, input_size, 1)
         self.fc = nn.Linear(input_size, 256)
@@ -120,9 +122,6 @@ class WaveNet(nn.Module):
         """
         docstring
         """
-        class Sin(nn.Module):
-            def forward(self, input):
-                return torch.sin(input)
         # Apply causal conv to the input
         x = self.conv1(x)
 
@@ -135,9 +134,11 @@ class WaveNet(nn.Module):
         x = sum(x_skip_list)
 
         # 4. Final Convs
-        x = Sin(x)
+        x = F.relu(x)
         x = F.relu(self.conv2(x)) # Expects 32 in, gives 32 out
-        x = Sin(self.conv3(x))
+        x = torch.sin(self.conv3(x))
+        _, x_skip_list = self.wavenet_block2(x)
+        x = sum(x_skip_list)
         x = F.relu(self.conv4(x))
         x = F.relu(self.conv5(x))
 
