@@ -1,0 +1,265 @@
+File: ml_ready_data_wavelet_method_db2.csv
+Feature set: simple_statistics_and_wavelet
+Features: ['mean', 'max', 'min', 'stddev', 'wavelet_level_0_energy_ratio', 'wavelet_level_1_energy_ratio', 'wavelet_level_2_energy_ratio', 'wavelet_level_3_energy_ratio', 'wavelet_level_4_energy_ratio', 'wavelet_level_5_energy_ratio']
+============================================================
+
+Model: control_chart_baseline
+  [Layer-level]
+    Confusion Matrix:
+[[73  0]
+ [ 0  3]]
+    False Negatives (predicted in-control, actually anomaly): 0
+    False Positives (predicted anomaly, actually in-control): 0
+    AUCROC:   1.0000
+    Macro F1: 1.0000
+
+Model: logistic_regression
+  [Sample-level]
+    Confusion Matrix:
+[[5650   29]
+ [ 178   60]]
+    False Negatives (predicted in-control, actually anomaly): 178
+    False Positives (predicted anomaly, actually in-control): 29
+    AUCROC:   0.8847
+    Macro F1: 0.6745
+  [Layer-level (mean)]
+    Confusion Matrix:
+[[73  0]
+ [ 2  1]]
+    False Negatives (predicted in-control, actually anomaly): 2
+    False Positives (predicted anomaly, actually in-control): 0
+    AUCROC:   0.9954
+    Macro F1: 0.7432
+  [Layer-level (median)]
+    Confusion Matrix:
+[[73  0]
+ [ 2  1]]
+    False Negatives (predicted in-control, actually anomaly): 2
+    False Positives (predicted anomaly, actually in-control): 0
+    AUCROC:   1.0000
+    Macro F1: 0.7432
+  [Layer-level (p75)]
+    Confusion Matrix:
+[[73  0]
+ [ 2  1]]
+    False Negatives (predicted in-control, actually anomaly): 2
+    False Positives (predicted anomaly, actually in-control): 0
+    AUCROC:   0.9909
+    Macro F1: 0.7432
+  [Layer-level (p90)]
+    Confusion Matrix:
+[[73  0]
+ [ 2  1]]
+    False Negatives (predicted in-control, actually anomaly): 2
+    False Positives (predicted anomaly, actually in-control): 0
+    AUCROC:   0.9817
+    Macro F1: 0.7432
+  [Layer-level (p95)]
+    Confusion Matrix:
+[[72  1]
+ [ 2  1]]
+    False Negatives (predicted in-control, actually anomaly): 2
+    False Positives (predicted anomaly, actually in-control): 1
+    AUCROC:   0.9772
+    Macro F1: 0.6898
+
+Model: decision_tree
+  [Sample-level]
+    Confusion Matrix:
+[[5657   22]
+ [ 178   60]]
+    False Negatives (predicted in-control, actually anomaly): 178
+    False Positives (predicted anomaly, actually in-control): 22
+    AUCROC:   0.6241
+    Macro F1: 0.6788
+  [Layer-level (mean)]
+    Confusion Matrix:
+[[73  0]
+ [ 2  1]]
+    False Negatives (predicted in-control, actually anomaly): 2
+    False Positives (predicted anomaly, actually in-control): 0
+    AUCROC:   0.9589
+    Macro F1: 0.7432
+  [Layer-level (median)]
+    Confusion Matrix:
+[[73  0]
+ [ 2  1]]
+    False Negatives (predicted in-control, actually anomaly): 2
+    False Positives (predicted anomaly, actually in-control): 0
+    AUCROC:   0.6667
+    Macro F1: 0.7432
+  [Layer-level (p75)]
+    Confusion Matrix:
+[[73  0]
+ [ 2  1]]
+    False Negatives (predicted in-control, actually anomaly): 2
+    False Positives (predicted anomaly, actually in-control): 0
+    AUCROC:   0.6667
+    Macro F1: 0.7432
+  [Layer-level (p90)]
+    Confusion Matrix:
+[[73  0]
+ [ 2  1]]
+    False Negatives (predicted in-control, actually anomaly): 2
+    False Positives (predicted anomaly, actually in-control): 0
+    AUCROC:   0.6667
+    Macro F1: 0.7432
+  [Layer-level (p95)]
+    Confusion Matrix:
+[[72  1]
+ [ 2  1]]
+    False Negatives (predicted in-control, actually anomaly): 2
+    False Positives (predicted anomaly, actually in-control): 1
+    AUCROC:   0.6598
+    Macro F1: 0.6898
+
+Model: random_forest
+  [Sample-level]
+    Confusion Matrix:
+[[5629   50]
+ [ 169   69]]
+    False Negatives (predicted in-control, actually anomaly): 169
+    False Positives (predicted anomaly, actually in-control): 50
+    AUCROC:   0.8738
+    Macro F1: 0.6837
+  [Layer-level (mean)]
+    Confusion Matrix:
+[[73  0]
+ [ 2  1]]
+    False Negatives (predicted in-control, actually anomaly): 2
+    False Positives (predicted anomaly, actually in-control): 0
+    AUCROC:   0.9909
+    Macro F1: 0.7432
+  [Layer-level (median)]
+    Confusion Matrix:
+[[73  0]
+ [ 2  1]]
+    False Negatives (predicted in-control, actually anomaly): 2
+    False Positives (predicted anomaly, actually in-control): 0
+    AUCROC:   1.0000
+    Macro F1: 0.7432
+  [Layer-level (p75)]
+    Confusion Matrix:
+[[73  0]
+ [ 2  1]]
+    False Negatives (predicted in-control, actually anomaly): 2
+    False Positives (predicted anomaly, actually in-control): 0
+    AUCROC:   0.9863
+    Macro F1: 0.7432
+  [Layer-level (p90)]
+    Confusion Matrix:
+[[72  1]
+ [ 2  1]]
+    False Negatives (predicted in-control, actually anomaly): 2
+    False Positives (predicted anomaly, actually in-control): 1
+    AUCROC:   0.9817
+    Macro F1: 0.6898
+  [Layer-level (p95)]
+    Confusion Matrix:
+[[69  4]
+ [ 1  2]]
+    False Negatives (predicted in-control, actually anomaly): 1
+    False Positives (predicted anomaly, actually in-control): 4
+    AUCROC:   0.9680
+    Macro F1: 0.7047
+
+Model: hist_gradient_boosting
+  [Sample-level]
+    Confusion Matrix:
+[[5623   56]
+ [ 166   72]]
+    False Negatives (predicted in-control, actually anomaly): 166
+    False Positives (predicted anomaly, actually in-control): 56
+    AUCROC:   0.8689
+    Macro F1: 0.6870
+  [Layer-level (mean)]
+    Confusion Matrix:
+[[73  0]
+ [ 2  1]]
+    False Negatives (predicted in-control, actually anomaly): 2
+    False Positives (predicted anomaly, actually in-control): 0
+    AUCROC:   0.9909
+    Macro F1: 0.7432
+  [Layer-level (median)]
+    Confusion Matrix:
+[[73  0]
+ [ 2  1]]
+    False Negatives (predicted in-control, actually anomaly): 2
+    False Positives (predicted anomaly, actually in-control): 0
+    AUCROC:   0.9954
+    Macro F1: 0.7432
+  [Layer-level (p75)]
+    Confusion Matrix:
+[[73  0]
+ [ 2  1]]
+    False Negatives (predicted in-control, actually anomaly): 2
+    False Positives (predicted anomaly, actually in-control): 0
+    AUCROC:   0.9909
+    Macro F1: 0.7432
+  [Layer-level (p90)]
+    Confusion Matrix:
+[[72  1]
+ [ 2  1]]
+    False Negatives (predicted in-control, actually anomaly): 2
+    False Positives (predicted anomaly, actually in-control): 1
+    AUCROC:   0.9817
+    Macro F1: 0.6898
+  [Layer-level (p95)]
+    Confusion Matrix:
+[[71  2]
+ [ 0  3]]
+    False Negatives (predicted in-control, actually anomaly): 0
+    False Positives (predicted anomaly, actually in-control): 2
+    AUCROC:   0.9817
+    Macro F1: 0.8681
+
+Model: autogluon
+  [Sample-level]
+    Confusion Matrix:
+[[5552  127]
+ [ 149   89]]
+    False Negatives (predicted in-control, actually anomaly): 149
+    False Positives (predicted anomaly, actually in-control): 127
+    AUCROC:   0.8576
+    Macro F1: 0.6839
+  [Layer-level (mean)]
+    Confusion Matrix:
+[[73  0]
+ [ 2  1]]
+    False Negatives (predicted in-control, actually anomaly): 2
+    False Positives (predicted anomaly, actually in-control): 0
+    AUCROC:   0.9909
+    Macro F1: 0.7432
+  [Layer-level (median)]
+    Confusion Matrix:
+[[73  0]
+ [ 2  1]]
+    False Negatives (predicted in-control, actually anomaly): 2
+    False Positives (predicted anomaly, actually in-control): 0
+    AUCROC:   1.0000
+    Macro F1: 0.7432
+  [Layer-level (p75)]
+    Confusion Matrix:
+[[73  0]
+ [ 2  1]]
+    False Negatives (predicted in-control, actually anomaly): 2
+    False Positives (predicted anomaly, actually in-control): 0
+    AUCROC:   0.9909
+    Macro F1: 0.7432
+  [Layer-level (p90)]
+    Confusion Matrix:
+[[72  1]
+ [ 1  2]]
+    False Negatives (predicted in-control, actually anomaly): 1
+    False Positives (predicted anomaly, actually in-control): 1
+    AUCROC:   0.9863
+    Macro F1: 0.8265
+  [Layer-level (p95)]
+    Confusion Matrix:
+[[70  3]
+ [ 0  3]]
+    False Negatives (predicted in-control, actually anomaly): 0
+    False Positives (predicted anomaly, actually in-control): 3
+    AUCROC:   0.9772
+    Macro F1: 0.8228
+
